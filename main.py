@@ -1,6 +1,11 @@
 import pandas as pd
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
+"""
+Link to GitHub (including our model's weights):
+https://github.com/ArmanZohourian/ED-NLP
+"""
+
 labels = ["anger", "fear", "joy", "sadness", "surprise"]
 
 def predict_single_text(
