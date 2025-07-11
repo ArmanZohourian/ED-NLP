@@ -25,7 +25,7 @@ def predict_single_text(
     :return: A list of strings containing the predicted emotions, as defined in track-a.csv
     """
 
-    tok  = AutoTokenizer.from_pretrained(checkpoint_dir)
+    tok = AutoTokenizer.from_pretrained(checkpoint_dir)
     model = AutoModelForSequenceClassification.from_pretrained(checkpoint_dir).eval()
 
     # multi-label uses sigmoid, not softmax
@@ -42,6 +42,25 @@ def predict(csv_file: str) -> list[list[str]]:
 
     df = pd.read_csv(csv_file)
     return [predict_single_text(x) for x in (df['text'])]
+
+
+def predict_one_hot(csv_file: str) -> list[list[int]]:
+    """
+
+    Like 'predict', but returning the one-hot encoding of predicted emotions per row
+
+    :param csv_file: Expect a path to a csv file in the same format as track-a.csv
+
+    :return: the predicted emotions per row of the dataframe
+    """
+
+    row_labels: list[list[str]] = predict(csv_file)  # reuse
+
+    return [
+        [1 if emotion in row else 0 for emotion in labels]
+        for row in row_labels
+    ]
+
 
 if __name__ == '__main__':
     result = predict("track-a-head.csv")
